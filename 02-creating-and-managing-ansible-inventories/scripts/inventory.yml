@@ -1,0 +1,43 @@
+---
+all:
+  children:
+    webservers:
+      hosts:
+        web01:
+          ansible_host: 127.0.0.1
+          ansible_connection: local
+          http_port: 80
+          server_role: frontend
+        web02:
+          ansible_host: 127.0.0.1
+          ansible_connection: local
+          http_port: 80
+          server_role: frontend
+    databases:
+      hosts:
+        db01:
+          ansible_host: 127.0.0.1
+          ansible_connection: local
+          mysql_port: 3306
+          db_role: master
+    loadbalancers:
+      hosts:
+        lb01:
+          ansible_host: 127.0.0.1
+          ansible_connection: local
+          lb_algorithm: round_robin
+    monitoring:
+      hosts:
+        monitor01:
+          ansible_host: 127.0.0.1
+          ansible_connection: local
+          monitoring_tools: ["nagios", "grafana"]
+    production:
+      children:
+        webservers:
+          databases:
+          loadbalancers:
+          monitoring:
+      vars:
+        datacenter: local-lab
+        security_level: high
