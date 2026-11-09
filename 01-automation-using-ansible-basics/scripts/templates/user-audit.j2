@@ -1,0 +1,18 @@
+User Account Audit Report
+========================
+Server: {{ ansible_hostname }}
+Date: {{ ansible_date_time.iso8601 }}
+
+System Users:
+{% for user, info in ansible_facts.getent_passwd.items() %}
+- Username: {{ user }} | UID: {{ info[1] }} | Home: {{ info[4] }} | Shell: {{ info[5] }}
+{% endfor %}
+
+Home Directories for Managed Users:
+{% if users_iter is defined %}
+{% for user in users_iter %}
+- /home/{{ user.username }} - {{ user.full_name }}
+{% endfor %}
+{% endif %}
+
+Audit completed by Ansible
